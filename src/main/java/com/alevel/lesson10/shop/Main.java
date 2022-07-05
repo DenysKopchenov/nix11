@@ -2,6 +2,9 @@ package com.alevel.lesson10.shop;
 
 import com.alevel.lesson10.shop.model.ball.Ball;
 import com.alevel.lesson10.shop.model.laptop.Laptop;
+import com.alevel.lesson10.shop.repository.impl.BallRepositoryListImpl;
+import com.alevel.lesson10.shop.repository.impl.LaptopRepositoryListImpl;
+import com.alevel.lesson10.shop.repository.impl.PhoneRepositoryListImpl;
 import com.alevel.lesson10.shop.service.BallService;
 import com.alevel.lesson10.shop.service.LaptopService;
 import com.alevel.lesson10.shop.service.PhoneService;
@@ -12,9 +15,9 @@ import java.util.Random;
 public class Main {
 
     private static final Random RANDOM = new Random();
-    private static final BallService BALL_SERVICE = new BallService();
-    private static final LaptopService LAPTOP_SERVICE = new LaptopService();
-    private static final PhoneService PHONE_SERVICE = new PhoneService();
+    private static final BallService BALL_SERVICE = new BallService(new BallRepositoryListImpl());
+    private static final LaptopService LAPTOP_SERVICE = new LaptopService(new LaptopRepositoryListImpl());
+    private static final PhoneService PHONE_SERVICE = new PhoneService(new PhoneRepositoryListImpl());
 
 
     public static void main(String[] args) {

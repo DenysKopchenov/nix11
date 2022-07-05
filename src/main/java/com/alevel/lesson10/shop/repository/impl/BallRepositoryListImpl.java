@@ -21,18 +21,26 @@ public class BallRepositoryListImpl implements BallRepository {
 
     @Override
     public void save(Ball product) {
-        balls.add(product);
-        LOGGER.info("Ball {} saved", product.getId());
+        if (product != null) {
+            balls.add(product);
+            LOGGER.info("Ball {} saved", product.getId());
+        } else {
+            throw new IllegalArgumentException("Ball can not be null");
+        }
     }
 
     @Override
     public void saveAll(List<Ball> products) {
-        balls.addAll(products);
+        if (products != null) {
+            balls.addAll(products);
+        } else {
+            throw new IllegalArgumentException("List can not be null");
+        }
     }
 
     @Override
     public List<Ball> findAll() {
-        return List.copyOf(balls);
+        return balls;
     }
 
     @Override
@@ -44,14 +52,16 @@ public class BallRepositoryListImpl implements BallRepository {
 
     @Override
     public void update(Ball product) {
-        balls.stream()
-                .filter(ball -> ball.getId().equals(product.getId()))
-                .findFirst().ifPresent(ball -> {
-                    ball.setTitle(product.getTitle());
-                    ball.setCount(product.getCount());
-                    ball.setPrice(product.getPrice());
-                    ball.setSize(product.getSize());
-                });
+        Optional<Ball> optionalBall = findById(product.getId());
+        if (optionalBall.isPresent()) {
+            Ball ball = optionalBall.get();
+            ball.setTitle(product.getTitle());
+            ball.setCount(product.getCount());
+            ball.setPrice(product.getPrice());
+            ball.setSize(product.getSize());
+        } else {
+            throw new IllegalArgumentException("No ball found");
+        }
     }
 
     @Override

@@ -27,6 +27,7 @@
 
     <root level="debug">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE-ROLLING"/>
     </root>
 
 </configuration>

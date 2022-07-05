@@ -3,7 +3,6 @@ package com.alevel.lesson10.shop.service;
 import com.alevel.lesson10.shop.model.laptop.CPU;
 import com.alevel.lesson10.shop.model.laptop.Laptop;
 import com.alevel.lesson10.shop.repository.LaptopRepository;
-import com.alevel.lesson10.shop.repository.impl.LaptopRepositoryListImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,11 +11,15 @@ import java.util.Random;
 public class LaptopService {
 
     private static final Random RANDOM = new Random();
-    private static final LaptopRepository LAPTOP_REPOSITORY = new LaptopRepositoryListImpl();
+    private LaptopRepository laptopRepository;
+
+    public LaptopService(LaptopRepository laptopRepository) {
+        this.laptopRepository = laptopRepository;
+    }
 
     public void fillLaptopRepository() {
         for (int i = 0; i < 5; i++) {
-            LAPTOP_REPOSITORY.save(new Laptop("Title - " + RANDOM.nextInt(),
+            laptopRepository.save(new Laptop("Title - " + RANDOM.nextInt(),
                     RANDOM.nextInt(),
                     RANDOM.nextLong(),
                     getRandomCPU()));
@@ -30,12 +33,12 @@ public class LaptopService {
     }
 
     public void printAll() {
-        LAPTOP_REPOSITORY.findAll().forEach(System.out::println);
+        laptopRepository.findAll().forEach(System.out::println);
         System.out.println("=".repeat(20));
     }
 
     public Laptop findById(String id) {
-        Optional<Laptop> optionalLaptop = LAPTOP_REPOSITORY.findById(id);
+        Optional<Laptop> optionalLaptop = laptopRepository.findById(id);
         if (optionalLaptop.isPresent()) {
             return optionalLaptop.get();
         }
@@ -43,18 +46,18 @@ public class LaptopService {
     }
 
     public void update(Laptop laptop) {
-        LAPTOP_REPOSITORY.update(laptop);
+        laptopRepository.update(laptop);
     }
 
     public void delete(String id) {
-        LAPTOP_REPOSITORY.delete(id);
+        laptopRepository.delete(id);
     }
 
     public List<Laptop> findAll() {
-        return LAPTOP_REPOSITORY.findAll();
+        return laptopRepository.findAll();
     }
 
     public void save(Laptop laptop) {
-        LAPTOP_REPOSITORY.save(laptop);
+        laptopRepository.save(laptop);
     }
 }

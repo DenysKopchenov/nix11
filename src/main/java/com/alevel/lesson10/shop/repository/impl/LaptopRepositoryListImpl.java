@@ -20,18 +20,26 @@ public class LaptopRepositoryListImpl implements LaptopRepository {
 
     @Override
     public void save(Laptop product) {
-        laptops.add(product);
-        LOGGER.info("Laptop {} saved", product.getId());
+        if (product != null) {
+            laptops.add(product);
+            LOGGER.info("Laptop {} saved", product.getId());
+        } else {
+            throw new IllegalArgumentException("Laptop can not be null");
+        }
     }
 
     @Override
     public void saveAll(List<Laptop> products) {
-        laptops.addAll(products);
+        if (products != null) {
+            laptops.addAll(products);
+        } else {
+            throw new IllegalArgumentException("List can not be null");
+        }
     }
 
     @Override
     public List<Laptop> findAll() {
-        return List.copyOf(laptops);
+        return laptops;
     }
 
     @Override
@@ -43,14 +51,16 @@ public class LaptopRepositoryListImpl implements LaptopRepository {
 
     @Override
     public void update(Laptop product) {
-        laptops.stream()
-                .filter(laptop -> laptop.getId().equals(product.getId()))
-                .findFirst().ifPresent(laptop -> {
-                    laptop.setTitle(product.getTitle());
-                    laptop.setCount(product.getCount());
-                    laptop.setPrice(product.getPrice());
-                    laptop.setCpu(product.getCpu());
-                });
+        Optional<Laptop> optionalLaptop = findById(product.getId());
+        if (optionalLaptop.isPresent()) {
+            Laptop laptop = optionalLaptop.get();
+            laptop.setTitle(product.getTitle());
+            laptop.setCount(product.getCount());
+            laptop.setPrice(product.getPrice());
+            laptop.setCpu(product.getCpu());
+        } else {
+            throw new IllegalArgumentException("No laptop found");
+        }
     }
 
     @Override
