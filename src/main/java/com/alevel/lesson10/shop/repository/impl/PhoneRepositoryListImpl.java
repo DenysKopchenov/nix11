@@ -20,18 +20,26 @@ public class PhoneRepositoryListImpl implements PhoneRepository {
 
     @Override
     public void save(Phone product) {
-        phones.add(product);
-        LOGGER.info("Phone {} saved", product.getId());
+        if (product != null) {
+            phones.add(product);
+            LOGGER.info("Phone {} saved", product.getId());
+        } else {
+            throw new IllegalArgumentException("Phone can not be null");
+        }
     }
 
     @Override
     public void saveAll(List<Phone> products) {
-        phones.addAll(products);
+        if (products != null) {
+            phones.addAll(products);
+        } else {
+            throw new IllegalArgumentException("List can not be null");
+        }
     }
 
     @Override
     public List<Phone> findAll() {
-        return List.copyOf(phones);
+        return phones;
     }
 
     @Override
@@ -43,15 +51,16 @@ public class PhoneRepositoryListImpl implements PhoneRepository {
 
     @Override
     public void update(Phone product) {
-        phones.stream()
-                .filter(phone -> phone.getId().equals(product.getId()))
-                .findFirst().ifPresent(phone -> {
-                    phone.setTitle(product.getTitle());
-                    phone.setCount(product.getCount());
-                    phone.setPrice(product.getPrice());
-                    phone.setModel(product.getModel());
-                    phone.setManufacturer(product.getManufacturer());
-                });
+        Optional<Phone> optionalPhone = findById(product.getId());
+        if (optionalPhone.isPresent()) {
+            Phone phone = optionalPhone.get();
+            phone.setTitle(product.getTitle());
+            phone.setCount(product.getCount());
+            phone.setPrice(product.getPrice());
+            phone.setModel(product.getModel());
+        } else {
+            throw new IllegalArgumentException("No phone found");
+        }
     }
 
     @Override

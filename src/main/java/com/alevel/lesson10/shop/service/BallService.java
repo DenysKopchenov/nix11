@@ -12,11 +12,15 @@ import java.util.Random;
 public class BallService {
 
     private static final Random RANDOM = new Random();
-    private static final BallRepository BALL_REPOSITORY = new BallRepositoryListImpl();
+    private BallRepository ballRepository = new BallRepositoryListImpl();
+
+    public BallService(BallRepository ballRepository) {
+        this.ballRepository = ballRepository;
+    }
 
     public void fillBallRepository() {
         for (int i = 0; i < 5; i++) {
-            BALL_REPOSITORY.save(new Ball("Title - " + RANDOM.nextInt(),
+            ballRepository.save(new Ball("Title - " + RANDOM.nextInt(),
                     RANDOM.nextInt(),
                     RANDOM.nextLong(),
                     getRandomSize()));
@@ -30,12 +34,12 @@ public class BallService {
     }
 
     public void printAll() {
-        BALL_REPOSITORY.findAll().forEach(System.out::println);
+        ballRepository.findAll().forEach(System.out::println);
         System.out.println("=".repeat(20));
     }
 
     public Ball findById(String id) {
-        Optional<Ball> optionalBall = BALL_REPOSITORY.findById(id);
+        Optional<Ball> optionalBall = ballRepository.findById(id);
         if (optionalBall.isPresent()) {
             return optionalBall.get();
         }
@@ -43,18 +47,18 @@ public class BallService {
     }
 
     public void update(Ball ball) {
-        BALL_REPOSITORY.update(ball);
+        ballRepository.update(ball);
     }
 
     public void delete(String id) {
-        BALL_REPOSITORY.delete(id);
+        ballRepository.delete(id);
     }
 
     public List<Ball> findAll() {
-        return BALL_REPOSITORY.findAll();
+        return ballRepository.findAll();
     }
 
     public void save(Ball ball) {
-        BALL_REPOSITORY.save(ball);
+        ballRepository.save(ball);
     }
 }
