@@ -8,13 +8,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatcher;
-import org.mockito.Mockito;
 
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class BallServiceTest {
@@ -53,23 +49,105 @@ class BallServiceTest {
         Assertions.assertEquals("title", actualBall.getTitle());
     }
 
-    @Test
-    void findById_emptyOptional() {
-        when(ballRepository.findById(anyString())).thenCallRealMethod();
-        Assertions.assertThrows(RuntimeException.class, () -> target.findById(anyString()));
-        verify(ballRepository).findById(anyString());
+    @Test()
+    void findById_realMethod() {
+        ballRepository = spy(BallRepositoryListImpl.class);
+        when(ballRepository.findById("123")).thenCallRealMethod();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> target.findById("123"));
     }
 
     @Test
     void findById_wrongId() {
-        when(ballRepository.findById(anyString())).thenThrow(RuntimeException.class);
-        Assertions.assertThrows(RuntimeException.class, () -> target.findById(anyString()));
-        verify(ballRepository).findById(anyString());
+        when(ballRepository.findById("123")).thenThrow(IllegalArgumentException.class);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> target.findById("123"));
+        verify(ballRepository).findById("123");
+    }
+
+    @Test
+    void findById_present() {
+        Ball ball = createBall();
+        when(ballRepository.findById(ball.getId())).thenReturn(Optional.of(ball));
+        Ball foundedBall = target.findById(ball.getId());
+
+        verify(ballRepository).findById(ball.getId());
+        Assertions.assertEquals(ball.getId(), foundedBall.getId());
+    }
+
+    @Test
+    void findById_noBall() {
+        Ball ball = createBall();
+        when(ballRepository.findById(ball.getId())).thenReturn(Optional.empty());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> target.findById(ball.getId()));
+        verify(ballRepository).findById(ball.getId());
+    }
+
+    @Test
+    void findByIdOrCreateDefaultBall_present() {
+        Ball ball = createBall();
+        when(ballRepository.findById(ball.getId())).thenReturn(Optional.of(ball));
+        Ball foundedBall = target.findByIdOrCreateDefaultBall(ball.getId());
+
+        verify(ballRepository).findById(ball.getId());
+        Assertions.assertEquals("title", foundedBall.getTitle());
+    }
+
+    @Test
+    void findByIdOrCreateDefaultBall_noBall() {
+        Ball ball = createBall();
+        Ball foundedBall = target.findByIdOrCreateDefaultBall(ball.getId());
+
+        verify(ballRepository).findById(ball.getId());
+        Assertions.assertEquals("", foundedBall.getTitle());
+        Assertions.assertEquals(0, foundedBall.getCount());
+        Assertions.assertEquals(0, foundedBall.getPrice());
+        Assertions.assertEquals(Size.NONE, foundedBall.getSize());
+    }
+
+    @Test
+    void findByIdOrCreateRandomBall_present() {
+        Ball ball = createBall();
+        when(ballRepository.findById(ball.getId())).thenReturn(Optional.of(ball));
+        Ball foundedBall = target.findByIdOrCreateRandomBall(ball.getId());
+
+        verify(ballRepository).findById(ball.getId());
+        Assertions.assertEquals("title", foundedBall.getTitle());
+        Assertions.assertEquals(1, foundedBall.getCount());
+        Assertions.assertEquals(2, foundedBall.getPrice());
+        Assertions.assertEquals(Size.SMALL, foundedBall.getSize());
+    }
+
+    @Test
+    void findByIdOrCreateRandomBall_noBall() {
+        Ball ball = createBall();
+        Ball foundedBall = target.findByIdOrCreateRandomBall(ball.getId());
+
+        verify(ballRepository).findById(ball.getId());
+        Assertions.assertNotEquals(ball.getId(), foundedBall.getId());
+    }
+
+    @Test
+    void findByIdOrCreateRandomOptionalBall_present() {
+        Ball ball = createBall();
+        when(ballRepository.findById(ball.getId())).thenReturn(Optional.of(ball));
+
+        Optional<Ball> foundedBallOptional = target.findByIdOrCreateRandomOptionalBall(ball.getId());
+        verify(ballRepository).findById(ball.getId());
+        Assertions.assertEquals(ball.getId(), foundedBallOptional.get().getId());
+    }
+
+    @Test
+    void findByIdOrCreateRandomOptionalBall_noBall() {
+        Ball ball = createBall();
+
+        Optional<Ball> foundedBallOptional = target.findByIdOrCreateRandomOptionalBall(ball.getId());
+        verify(ballRepository).findById(ball.getId());
+        Assertions.assertNotEquals(ball.getId(), foundedBallOptional.get().getId());
     }
 
     @Test
     void update() {
-        Ball ball = new Ball("title", 1, 2, Size.SMALL);
+        Ball ball = createBall();
         target.save(ball);
         ball.setTitle("updated");
         target.update(ball);
@@ -79,6 +157,27 @@ class BallServiceTest {
         Assertions.assertEquals("updated", argumentCaptor.getValue().getTitle());
     }
 
+    @Test
+    void updateBallIfPresent_present() {
+        Ball ball = createBall();
+        when(ballRepository.findById(ball.getId())).thenReturn(Optional.of(ball));
+        ball.setTitle("Updated");
+        ball.setSize(Size.BIG);
+        target.updateBallIfPresent(ball);
+
+        verify(ballRepository).update(ball);
+        Assertions.assertEquals("Updated", target.findById(ball.getId()).getTitle());
+        Assertions.assertEquals(Size.BIG, target.findById(ball.getId()).getSize());
+    }
+
+    @Test
+    void updateBallIfPresent_noBall() {
+        Ball ball = createBall();
+        target.updateBallIfPresent(ball);
+
+        verify(ballRepository).findById(ball.getId());
+        verify(ballRepository, times(0)).update(ball);
+    }
 
     @Test
     void delete() {
@@ -86,6 +185,45 @@ class BallServiceTest {
         verify(ballRepository).delete("123");
     }
 
+    @Test
+    void deleteIfPresentOrSave_present() {
+        Ball ball = createBall();
+        when(ballRepository.findById(ball.getId())).thenReturn(Optional.of(ball));
+        target.deleteIfPresentOrSave(ball);
+
+        verify(ballRepository).findById(ball.getId());
+        verify(ballRepository).delete(ball.getId());
+        verify(ballRepository, times(0)).save(ball);
+    }
+
+    @Test
+    void deleteIfPresentOrSave_noBall() {
+        Ball ball = createBall();
+        target.deleteIfPresentOrSave(ball);
+
+        verify(ballRepository).findById(ball.getId());
+        verify(ballRepository, times(0)).delete(ball.getId());
+        verify(ballRepository).save(ball);
+    }
+
+    @Test
+    void deleteBallIfSizeIsBig_present() {
+        Ball ball = new Ball("title", 1, 2, Size.BIG);
+        when(ballRepository.findById(ball.getId())).thenReturn(Optional.of(ball));
+        target.deleteBallIfSizeIsBig(ball.getId());
+
+        verify(ballRepository).findById(ball.getId());
+        verify(ballRepository).delete(ball.getId());
+    }
+
+    @Test
+    void deleteBallIfSizeIsBig_noBall() {
+        Ball ball = new Ball("title", 1, 2, Size.BIG);
+        target.deleteBallIfSizeIsBig(ball.getId());
+
+        verify(ballRepository).findById(ball.getId());
+        verify(ballRepository, times(0)).delete(ball.getId());
+    }
 
     @Test
     void findAll() {
@@ -96,9 +234,32 @@ class BallServiceTest {
 
     @Test
     void save() {
-        Ball ball = new Ball("title", 1, 2, Size.SMALL);
+        Ball ball = createBall();
         target.save(ball);
 
         verify(ballRepository).save(ball);
+    }
+
+    @Test
+    void mapBallToString_present() {
+        Ball ball = createBall();
+        when(ballRepository.findById(ball.getId())).thenReturn(Optional.of(ball));
+
+        String actual = target.mapBallToString(ball.getId());
+        verify(ballRepository).findById(ball.getId());
+        Assertions.assertEquals(ball.toString(), actual);
+    }
+
+    @Test
+    void mapBallToString_noBall() {
+        Ball ball = createBall();
+
+        String actual = target.mapBallToString(ball.getId());
+        verify(ballRepository).findById(ball.getId());
+        Assertions.assertEquals("Not Found", actual);
+    }
+
+    private Ball createBall() {
+        return new Ball("title", 1, 2, Size.SMALL);
     }
 }
