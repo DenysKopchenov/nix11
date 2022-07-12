@@ -5,17 +5,17 @@ import com.alevel.lesson10.shop.model.Product;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductRepository<E extends Product> {
+public interface ProductRepository<T extends Product> {
 
-    void save(E product);
+    void save(T product);
 
-    void saveAll(List<E> products);
+    void saveAll(List<T> products);
 
-    List<E> findAll();
+    List<T> findAll();
 
-    Optional<E> findById(String id);
+    Optional<T> findById(String id);
 
-    void update(E product);
+    void update(T product);
 
     void delete(String id);
 

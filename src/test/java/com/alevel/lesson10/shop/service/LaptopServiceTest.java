@@ -4,6 +4,7 @@ package com.alevel.lesson10.shop.service;
 import com.alevel.lesson10.shop.model.laptop.CPU;
 import com.alevel.lesson10.shop.model.laptop.Laptop;
 import com.alevel.lesson10.shop.repository.LaptopRepository;
+
 import com.alevel.lesson10.shop.repository.impl.LaptopRepositoryListImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,6 @@ import org.mockito.ArgumentCaptor;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -31,8 +31,8 @@ class LaptopServiceTest {
     }
 
     @Test
-    void fillLaptopRepository() {
-        target.fillLaptopRepository();
+    void createAndFillRepository() {
+        target.createAndFillRepository(5);
         verify(laptopRepository, times(5)).save(any());
     }
 
@@ -56,17 +56,16 @@ class LaptopServiceTest {
     }
 
     @Test
-    void findById_emptyOptional() {
-        when(laptopRepository.findById(anyString())).thenCallRealMethod();
-        Assertions.assertThrows(RuntimeException.class, () -> target.findById(anyString()));
-        verify(laptopRepository).findById(anyString());
+    void findById_callRealMethod() {
+        laptopRepository = spy(LaptopRepositoryListImpl.class);
+        when(laptopRepository.findById("1")).thenCallRealMethod();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> target.findById("1"));
     }
 
     @Test
     void findById_wrongId() {
-        when(laptopRepository.findById(anyString())).thenThrow(RuntimeException.class);
-        Assertions.assertThrows(RuntimeException.class, () -> target.findById(anyString()));
-        verify(laptopRepository).findById(anyString());
+        when(laptopRepository.findById("1")).thenThrow(IllegalArgumentException.class);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> target.findById("1"));
     }
 
     @Test

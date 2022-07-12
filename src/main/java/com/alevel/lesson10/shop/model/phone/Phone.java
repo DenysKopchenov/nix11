@@ -1,6 +1,5 @@
 package com.alevel.lesson10.shop.model.phone;
 
-import com.alevel.lesson10.shop.model.Manufacturer;
 import com.alevel.lesson10.shop.model.Product;
 
 public class Phone extends Product {
