@@ -1,6 +1,6 @@
 package com.alevel.lesson10.shop.repository.impl;
 
-import com.alevel.lesson10.shop.model.Manufacturer;
+import com.alevel.lesson10.shop.model.phone.Manufacturer;
 import com.alevel.lesson10.shop.model.phone.Phone;
 import com.alevel.lesson10.shop.repository.PhoneRepository;
 import org.junit.jupiter.api.Assertions;
@@ -8,8 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PhoneRepositoryListImplTest {
 

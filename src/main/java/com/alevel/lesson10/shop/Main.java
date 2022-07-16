@@ -42,9 +42,9 @@ public class Main {
     }
 
     private static void createAllProducts() {
-        BALL_SERVICE.fillBallRepository();
-        LAPTOP_SERVICE.fillLaptopRepository();
-        PHONE_SERVICE.fillPhoneRepository();
+        BALL_SERVICE.createAndFillRepository(5);
+        LAPTOP_SERVICE.createAndFillRepository(5);
+        PHONE_SERVICE.createAndFillRepository(5);
     }
 
     private static void printAllProducts() {

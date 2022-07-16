@@ -1,8 +1,9 @@
 package com.alevel.lesson10.shop.service;
 
-import com.alevel.lesson10.shop.model.Manufacturer;
+import com.alevel.lesson10.shop.model.phone.Manufacturer;
 import com.alevel.lesson10.shop.model.phone.Phone;
 import com.alevel.lesson10.shop.repository.PhoneRepository;
+import com.alevel.lesson10.shop.repository.impl.BallRepositoryListImpl;
 import com.alevel.lesson10.shop.repository.impl.PhoneRepositoryListImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +12,6 @@ import org.mockito.ArgumentCaptor;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -30,8 +30,8 @@ class PhoneServiceTest {
     }
 
     @Test
-    void fillPhoneRepository() {
-        target.fillPhoneRepository();
+    void createAndFillRepository() {
+        target.createAndFillRepository(5);
         verify(phoneRepository, times(5)).save(any());
     }
 
@@ -55,17 +55,16 @@ class PhoneServiceTest {
     }
 
     @Test
-    void findById_emptyOptional() {
-        when(phoneRepository.findById(anyString())).thenCallRealMethod();
-        Assertions.assertThrows(RuntimeException.class, () -> target.findById(anyString()));
-        verify(phoneRepository).findById(anyString());
+    void findById_callRealMethod() {
+        phoneRepository = spy(PhoneRepositoryListImpl.class);
+        when(phoneRepository.findById("1")).thenCallRealMethod();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> target.findById("1"));
     }
 
     @Test
     void findById_wrongId() {
-        when(phoneRepository.findById(anyString())).thenThrow(RuntimeException.class);
-        Assertions.assertThrows(RuntimeException.class, () -> target.findById(anyString()));
-        verify(phoneRepository).findById(anyString());
+        when(phoneRepository.findById("1")).thenThrow(IllegalArgumentException.class);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> target.findById("1"));
     }
 
     @Test
