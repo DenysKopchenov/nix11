@@ -31,8 +31,8 @@ public abstract class AbstractProductService<T extends Product> {
         return repository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
-    public void update(T product) {
-        repository.update(product);
+    public void update(Product product) {
+        repository.update((T) product);
     }
 
     public void delete(String id) {

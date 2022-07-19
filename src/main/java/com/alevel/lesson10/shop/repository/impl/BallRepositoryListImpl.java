@@ -58,7 +58,6 @@ public class BallRepositoryListImpl implements BallRepository {
             ball.setTitle(product.getTitle());
             ball.setCount(product.getCount());
             ball.setPrice(product.getPrice());
-            ball.setSize(product.getSize());
         } else {
             throw new IllegalArgumentException("No ball found");
         }

@@ -92,12 +92,10 @@ class OptionalExamplesTest {
         Ball ball = createBall();
         when(ballRepository.findById(ball.getId())).thenReturn(Optional.of(ball));
         ball.setTitle("Updated");
-        ball.setSize(Size.BIG);
         target.updateBallIfPresent(ball);
 
         verify(ballRepository).update(ball);
         Assertions.assertEquals("Updated", ballRepository.findById(ball.getId()).get().getTitle());
-        Assertions.assertEquals(Size.BIG, ballRepository.findById(ball.getId()).get().getSize());
     }
 
     @Test

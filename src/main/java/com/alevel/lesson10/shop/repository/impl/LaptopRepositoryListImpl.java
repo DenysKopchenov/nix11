@@ -57,7 +57,6 @@ public class LaptopRepositoryListImpl implements LaptopRepository {
             laptop.setTitle(product.getTitle());
             laptop.setCount(product.getCount());
             laptop.setPrice(product.getPrice());
-            laptop.setCpu(product.getCpu());
         } else {
             throw new IllegalArgumentException("No laptop found");
         }
