@@ -18,7 +18,7 @@ public class VersioningLinkedList<E extends Product> implements Iterable<E> {
         versions = new HashSet<>();
     }
 
-    private void linkFirst(E e) {
+    public void addFirst(E e) {
         final Node<E> f = first;
         final Node<E> newNode = new Node<>(null, e, f);
         first = newNode;
@@ -29,10 +29,6 @@ public class VersioningLinkedList<E extends Product> implements Iterable<E> {
         }
         size++;
         versions.add(newNode.version);
-    }
-
-    public void addFirst(E e) {
-        linkFirst(e);
     }
 
     public LocalDateTime getFirstVersionDate() {
@@ -127,7 +123,7 @@ public class VersioningLinkedList<E extends Product> implements Iterable<E> {
     }
 
     @Override
-    public void forEach(Consumer action) {
+    public void forEach(Consumer<? super E> action) {
         Iterable.super.forEach(action);
     }
 
