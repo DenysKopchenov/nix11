@@ -15,10 +15,6 @@ public class Laptop extends Product {
         return cpu;
     }
 
-    public void setCpu(CPU cpu) {
-        this.cpu = cpu;
-    }
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Laptop{");

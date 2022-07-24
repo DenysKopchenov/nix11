@@ -46,7 +46,6 @@ public class OptionalExamples {
         ballRepository.findById(ball.getId()).ifPresent(foundedBall -> {
             foundedBall.setTitle(ball.getTitle());
             foundedBall.setPrice(1L);
-            foundedBall.setSize(Size.BIG);
             ballRepository.update(foundedBall);
         });
     }

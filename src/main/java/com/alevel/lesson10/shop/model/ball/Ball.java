@@ -15,10 +15,6 @@ public class Ball extends Product {
         return size;
     }
 
-    public void setSize(Size size) {
-        this.size = size;
-    }
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Ball{");
