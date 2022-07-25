@@ -1,5 +1,6 @@
-package com.alevel.lesson10.shop.model;
+package com.alevel.lesson10.shop.service;
 
+import com.alevel.lesson10.shop.model.ProductType;
 import com.alevel.lesson10.shop.model.ball.Ball;
 import com.alevel.lesson10.shop.model.laptop.Laptop;
 import com.alevel.lesson10.shop.model.phone.Phone;
