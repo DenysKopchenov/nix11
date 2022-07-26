@@ -12,7 +12,7 @@ public class Phone extends Product {
     private List<String> details;
     private LocalDateTime creatingDate;
     private String currency;
-    private OperatingSystem operatingSystem;
+    private OperationSystem operationSystem;
 
 
     public Phone(String title, int count, long price, String model, Manufacturer manufacturer) {
@@ -28,13 +28,13 @@ public class Phone extends Product {
         this.details = details;
     }
 
-    public Phone(String title, int count, long price, String model, Manufacturer manufacturer, LocalDateTime creatingDate, String currency, OperatingSystem operatingSystem) {
+    public Phone(String title, int count, long price, String model, Manufacturer manufacturer, LocalDateTime creatingDate, String currency, OperationSystem operationSystem) {
         super(title, count, price);
         this.model = model;
         this.manufacturer = manufacturer;
         this.creatingDate = creatingDate;
         this.currency = currency;
-        this.operatingSystem = operatingSystem;
+        this.operationSystem = operationSystem;
     }
 
     public String getModel() {
@@ -77,12 +77,12 @@ public class Phone extends Product {
         this.currency = currency;
     }
 
-    public OperatingSystem getOperatingSystem() {
-        return operatingSystem;
+    public OperationSystem getOperatingSystem() {
+        return operationSystem;
     }
 
-    public void setOperatingSystem(OperatingSystem operatingSystem) {
-        this.operatingSystem = operatingSystem;
+    public void setOperatingSystem(OperationSystem operationSystem) {
+        this.operationSystem = operationSystem;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class Phone extends Product {
         sb.append(", details=").append(details);
         sb.append(", creatingDate=").append(creatingDate);
         sb.append(", currency='").append(currency).append('\'');
-        sb.append(", operatingSystem=").append(operatingSystem);
+        sb.append(", operatingSystem=").append(operationSystem);
         sb.append(", id='").append(id).append('\'');
         sb.append(", title='").append(title).append('\'');
         sb.append(", count=").append(count);

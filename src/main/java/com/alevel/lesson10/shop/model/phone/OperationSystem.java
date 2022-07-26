@@ -1,6 +1,6 @@
 package com.alevel.lesson10.shop.model.phone;
 
-public class OperatingSystem {
+public class OperationSystem {
 
     private String designation;
     private int version;
