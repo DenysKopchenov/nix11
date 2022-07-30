@@ -106,8 +106,9 @@ public abstract class AbstractProductService<T extends Product> {
                             (Long) map.getOrDefault("price", 0L),
                             Size.valueOf(map.getOrDefault("size", Size.NONE).toString()));
                 };
+            } else{
+                throw new IllegalArgumentException();
             }
-            throw new IllegalArgumentException();
         };
         return mapToProduct.apply(fields);
     }
