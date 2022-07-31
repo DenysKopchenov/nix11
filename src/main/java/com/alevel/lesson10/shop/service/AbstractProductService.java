@@ -88,7 +88,7 @@ public abstract class AbstractProductService<T extends Product> {
     }
 
     public Product mapProduct(Map<String, Object> fields) {
-        Function<Map<String, Object>, Product> mapToProduct = (map) -> {
+        Function<Map<String, Object>, Product> mapToProduct = map -> {
             Object productType = map.get("productType");
             if (productType instanceof ProductType type) {
                 return switch (type) {
@@ -106,7 +106,7 @@ public abstract class AbstractProductService<T extends Product> {
                             (Long) map.getOrDefault("price", 0L),
                             Size.valueOf(map.getOrDefault("size", Size.NONE).toString()));
                 };
-            } else{
+            } else {
                 throw new IllegalArgumentException();
             }
         };
