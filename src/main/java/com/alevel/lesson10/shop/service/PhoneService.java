@@ -4,6 +4,8 @@ import com.alevel.lesson10.shop.model.phone.Manufacturer;
 import com.alevel.lesson10.shop.model.phone.Phone;
 import com.alevel.lesson10.shop.repository.ProductRepository;
 
+import java.util.List;
+
 public class PhoneService extends AbstractProductService<Phone> {
 
     public PhoneService(ProductRepository<Phone> repository) {
@@ -12,10 +14,10 @@ public class PhoneService extends AbstractProductService<Phone> {
 
     @Override
     protected Phone createProduct() {
-        return new Phone("Title - " + RANDOM.nextInt(),
-                RANDOM.nextInt(),
-                RANDOM.nextLong(),
-                "Model - " + RANDOM.nextInt(),
+        return new Phone("Title - " + RANDOM.nextInt(1000),
+                RANDOM.nextInt(1000),
+                RANDOM.nextLong(1000),
+                "Model - " + RANDOM.nextInt(1000),
                 getRandomManufacturer());
     }
 
@@ -25,4 +27,10 @@ public class PhoneService extends AbstractProductService<Phone> {
         return values[index];
     }
 
+    public boolean checkDetailExists(String detailToCheck) {
+        return findAll()
+                .stream()
+                .flatMap(phone -> phone.getDetails().stream())
+                .anyMatch(detail -> detail.equals(detailToCheck));
+    }
 }

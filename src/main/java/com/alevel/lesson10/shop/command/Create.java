@@ -1,6 +1,6 @@
 package com.alevel.lesson10.shop.command;
 
-import com.alevel.lesson10.shop.model.ProductFactory;
+import com.alevel.lesson10.shop.service.ProductFactory;
 import com.alevel.lesson10.shop.model.ProductType;
 
 import java.io.IOException;

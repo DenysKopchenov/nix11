@@ -52,8 +52,8 @@ public class SimpleTree<E extends Product> {
                 sum(root.right));
     }
 
-    public void traverseNodes(StringBuilder sb, String padding, String pointer, Node<E> node,
-                              boolean hasRightSibling) {
+    private void traverseNodes(StringBuilder sb, String padding, String pointer, Node<E> node,
+                               boolean hasRightSibling) {
         if (node != null) {
             sb.append("\n");
             sb.append(padding);
@@ -76,7 +76,7 @@ public class SimpleTree<E extends Product> {
         }
     }
 
-    public String traversePreOrder(Node<E> root) {
+    private String traversePreOrder(Node<E> root) {
 
         if (root == null) {
             return "";

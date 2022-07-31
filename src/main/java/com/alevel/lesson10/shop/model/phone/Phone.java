@@ -2,15 +2,25 @@ package com.alevel.lesson10.shop.model.phone;
 
 import com.alevel.lesson10.shop.model.Product;
 
+import java.util.List;
+
 public class Phone extends Product {
 
     private String model;
     private Manufacturer manufacturer;
+    private List<String> details;
 
     public Phone(String title, int count, long price, String model, Manufacturer manufacturer) {
         super(title, count, price);
         this.model = model;
         this.manufacturer = manufacturer;
+    }
+
+    public Phone(String title, int count, long price, String model, Manufacturer manufacturer, List<String> details) {
+        super(title, count, price);
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.details = details;
     }
 
     public String getModel() {
@@ -27,6 +37,14 @@ public class Phone extends Product {
 
     public void setManufacturer(Manufacturer manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public List<String> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<String> details) {
+        this.details = details;
     }
 
     @Override
