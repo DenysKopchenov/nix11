@@ -1,4 +1,4 @@
 .idea
 *.iml
-src/main/java/solid/target
+*/target
 */logs
