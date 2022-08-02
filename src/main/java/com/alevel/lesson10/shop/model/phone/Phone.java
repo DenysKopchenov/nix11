@@ -4,6 +4,7 @@ import com.alevel.lesson10.shop.model.Product;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class Phone extends Product {
 
@@ -100,5 +101,19 @@ public class Phone extends Product {
         sb.append(", price=").append(price);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Phone phone = (Phone) o;
+        return Objects.equals(model, phone.model) && manufacturer == phone.manufacturer && Objects.equals(details, phone.details) && Objects.equals(creatingDate, phone.creatingDate) && Objects.equals(currency, phone.currency) && Objects.equals(operationSystem, phone.operationSystem);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), model, manufacturer, details, creatingDate, currency, operationSystem);
     }
 }

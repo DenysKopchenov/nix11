@@ -9,6 +9,10 @@ public abstract class Product {
     protected int count;
     protected long price;
 
+    public Product() {
+        id = UUID.randomUUID().toString();
+    }
+
     protected Product(String title, int count, long price) {
         id = UUID.randomUUID().toString();
         this.title = title;

@@ -33,15 +33,23 @@ public final class Controller {
 
     private static void repeatOrOtherAction(Command command) throws IOException {
         int input = Utils.getInput(List.of("Repeat", "Other action"));
-        switch (input) {
-            case 0 -> {
-                command.execute();
-                repeatOrOtherAction(command);
-            }
-            case 1 -> run();
-            default -> {
-                System.out.println("Wrong input");
-                repeatOrOtherAction(command);
+        while (input >= 0) {
+            switch (input) {
+                case 0 -> {
+                    command.execute();
+                    input = Utils.getInput(List.of("Repeat", "Other action"));
+                }
+                case 1 -> {
+                    int userAction = chooseAction();
+                    Commands[] commands = Commands.values();
+                    Command newCommand = commands[userAction].getCommand();
+                    newCommand.execute();
+                    input = Utils.getInput(List.of("Repeat", "Other action"));
+                }
+                default -> {
+                    System.out.println("Wrong input");
+                    input = Utils.getInput(List.of("Repeat", "Other action"));
+                }
             }
         }
     }

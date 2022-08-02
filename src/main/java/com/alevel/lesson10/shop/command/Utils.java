@@ -16,7 +16,7 @@ public final class Utils {
 
     public static int getInput(List<String> names) throws IOException {
         while (true) {
-            System.out.println("Please enter number between 0 and " + names.size());
+            System.out.println("Please enter number between 0 and " + (names.size() - 1));
             for (int i = 0; i < names.size(); i++) {
                 System.out.printf("%d) %s%n", i, names.get(i));
             }

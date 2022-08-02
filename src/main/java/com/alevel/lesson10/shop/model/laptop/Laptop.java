@@ -2,12 +2,16 @@ package com.alevel.lesson10.shop.model.laptop;
 
 import com.alevel.lesson10.shop.model.Product;
 
+import java.util.Objects;
+
 public class Laptop extends Product {
 
     private CPU cpu;
 
-    public Laptop(String title, int count, long price, CPU cpu) {
-        super(title, count, price);
+    private Laptop() {
+    }
+
+    public void setCpu(CPU cpu) {
         this.cpu = cpu;
     }
 
@@ -26,4 +30,49 @@ public class Laptop extends Product {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Laptop laptop = (Laptop) o;
+        return cpu == laptop.cpu;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), cpu);
+    }
+
+    public static class Builder {
+        private Laptop laptop;
+
+        public Builder(long price, CPU cpu) {
+            laptop = new Laptop();
+            laptop.setPrice(price);
+            laptop.setCpu(cpu);
+        }
+
+        public Builder setTittle(String title) {
+            if (title.length() > 20) {
+                throw new IllegalArgumentException("Title cant be more then 20 symbols");
+            }
+            laptop.setTitle(title);
+            return this;
+        }
+
+        public Builder setCount(int count) {
+            if (count < 0) {
+                throw new IllegalArgumentException("Count cant be less then 0");
+            }
+            laptop.setCount(count);
+            return this;
+        }
+
+        public Laptop build() {
+            return laptop;
+        }
+    }
+
 }
