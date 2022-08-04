@@ -46,9 +46,12 @@ public class Laptop extends Product {
     }
 
     public static class Builder {
-        private Laptop laptop;
+        private final Laptop laptop;
 
         public Builder(long price, CPU cpu) {
+            if (cpu == null) {
+                throw new IllegalArgumentException("CPU can not be null");
+            }
             laptop = new Laptop();
             laptop.setPrice(price);
             laptop.setCpu(cpu);
