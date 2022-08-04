@@ -2,6 +2,8 @@ package com.alevel.lesson10.shop.model.ball;
 
 import com.alevel.lesson10.shop.model.Product;
 
+import java.util.Objects;
+
 public class Ball extends Product {
 
     private Size size;
@@ -25,5 +27,19 @@ public class Ball extends Product {
         sb.append(", price=").append(price);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Ball ball = (Ball) o;
+        return size == ball.size;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), size);
     }
 }

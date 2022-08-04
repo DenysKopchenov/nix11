@@ -18,9 +18,9 @@ public class LaptopService extends AbstractProductService<Laptop> {
 
     @Override
     protected Laptop createProduct() {
-        return new Laptop("Title - " + RANDOM.nextInt(),
-                RANDOM.nextInt(),
-                RANDOM.nextLong(),
-                getRandomCPU());
+        return new Laptop.Builder(RANDOM.nextLong(), getRandomCPU())
+                .setTittle("Title - " + RANDOM.nextInt())
+                .setCount(RANDOM.nextInt(1000))
+                .build();
     }
 }
