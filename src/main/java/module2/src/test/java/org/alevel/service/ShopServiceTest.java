@@ -49,12 +49,9 @@ class ShopServiceTest {
     @Test
     void generateRandomInvoice() {
         List<Product> products = List.of(new Telephone(ProductType.TELEPHONE), new Television(ProductType.TELEVISION), new Telephone(ProductType.TELEPHONE));
-        for (Field declaredField : target.getClass().getDeclaredFields()) {
-            if (declaredField.getName().endsWith("products")) {
-                declaredField.setAccessible(true);
-                declaredField.set(target, products);
-            }
-        }
+        Field field = target.getClass().getDeclaredField("products");
+        field.setAccessible(true);
+        field.set(target, products);
         Customer customer = new Customer();
         Invoice invoice = target.generateRandomInvoice((i -> i > 100), customer);
 
