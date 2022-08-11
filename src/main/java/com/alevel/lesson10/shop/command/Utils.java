@@ -26,9 +26,8 @@ public final class Utils {
                 if (userInput < names.size()) {
                     return userInput;
                 }
-            } else {
-                System.out.println("Wrong input");
             }
+            System.out.println("Wrong input");
         }
     }
 }

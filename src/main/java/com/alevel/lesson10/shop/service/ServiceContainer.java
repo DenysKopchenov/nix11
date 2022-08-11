@@ -1,29 +1,37 @@
 package com.alevel.lesson10.shop.service;
 
+import com.alevel.lesson10.shop.context.ApplicationContext;
 import com.alevel.lesson10.shop.model.ball.Ball;
 import com.alevel.lesson10.shop.model.laptop.Laptop;
 import com.alevel.lesson10.shop.model.phone.Phone;
-import com.alevel.lesson10.shop.repository.impl.BallRepositoryListImpl;
-import com.alevel.lesson10.shop.repository.impl.LaptopRepositoryListImpl;
-import com.alevel.lesson10.shop.repository.impl.PhoneRepositoryListImpl;
+
+import java.util.Map;
 
 public final class ServiceContainer {
-    private static final AbstractProductService<Ball> BALL_SERVICE = new BallService(new BallRepositoryListImpl());
-    private static final AbstractProductService<Phone> PHONE_SERVICE = new PhoneService(new PhoneRepositoryListImpl());
-    private static final AbstractProductService<Laptop> LAPTOP_SERVICE = new LaptopService(new LaptopRepositoryListImpl());
+    private static final AbstractProductService<Ball> ballService;
+    private static final AbstractProductService<Phone> phoneService;
+    private static final AbstractProductService<Laptop> laptopService;
 
     private ServiceContainer() {
     }
 
+    static {
+        ApplicationContext applicationContext = new ApplicationContext();
+        Map<Class<?>, Object> cached = applicationContext.cacheSingletons();
+        ballService = (AbstractProductService<Ball>) cached.get(BallService.class);
+        phoneService = (AbstractProductService<Phone>) cached.get(PhoneService.class);
+        laptopService = (AbstractProductService<Laptop>) cached.get(LaptopService.class);
+    }
+
     public static AbstractProductService<Ball> getBallService() {
-        return BALL_SERVICE;
+        return ballService;
     }
 
     public static AbstractProductService<Laptop> getLaptopService() {
-        return LAPTOP_SERVICE;
+        return laptopService;
     }
 
     public static AbstractProductService<Phone> getPhoneService() {
-        return PHONE_SERVICE;
+        return phoneService;
     }
 }

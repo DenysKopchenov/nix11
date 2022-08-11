@@ -1,5 +1,7 @@
 package com.alevel.lesson10.shop.repository.impl;
 
+import com.alevel.lesson10.shop.annotations.Autowired;
+import com.alevel.lesson10.shop.annotations.Singleton;
 import com.alevel.lesson10.shop.model.laptop.Laptop;
 import com.alevel.lesson10.shop.repository.LaptopRepository;
 import org.slf4j.Logger;
@@ -9,11 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Singleton
 public class LaptopRepositoryListImpl implements LaptopRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LaptopRepositoryListImpl.class);
     private final List<Laptop> laptops;
 
+    @Autowired
     public LaptopRepositoryListImpl() {
         laptops = new ArrayList<>();
     }
