@@ -2,7 +2,6 @@ package org.alevel.controller;
 
 import org.alevel.model.invoice.Invoice;
 import org.alevel.model.invoice.InvoiceType;
-import org.alevel.model.product.Product;
 import org.alevel.model.product.ProductType;
 import org.alevel.service.PersonService;
 import org.alevel.service.ShopService;
@@ -10,11 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.LongPredicate;
-import java.util.stream.Collectors;
 
 public class Controller {
 
@@ -23,13 +21,11 @@ public class Controller {
     private final ShopService shopService;
     private final PersonService personService;
 
-    private final List<Invoice> invoices;
 
     public Controller() {
         reader = new BufferedReader(new InputStreamReader(System.in));
-        shopService = new ShopService(new Random());
+        shopService = new ShopService();
         personService = new PersonService();
-        invoices = new ArrayList<>();
     }
 
     public void run() throws IOException {
@@ -43,7 +39,7 @@ public class Controller {
                 .getResourceAsStream("products.csv"))))) {
             shopService.createProducts(bufferedReader);
             for (int i = 0; i < 15; i++) {
-                invoices.add(shopService.generateRandomInvoice(longPredicate, personService.generateRandomCustomer()));
+                shopService.saveInvoice(shopService.generateRandomInvoice(longPredicate, personService.generateRandomCustomer()));
             }
         }
         System.out.println(separator);
@@ -78,28 +74,19 @@ public class Controller {
 
     private void printSortedInvoices() {
         System.out.println("Sorted invoices");
-        Comparator<Invoice> compareByAge = Comparator.comparing(invoice -> invoice.getCustomer().getAge(), Comparator.reverseOrder());
-        Comparator<Invoice> compareByProductsListSize = Comparator.comparing(invoice -> invoice.getProducts().size());
-        Comparator<Invoice> compareByInvoiceSum = Comparator.comparing(invoice -> shopService.getInvoiceSum(invoice.getProducts()));
-
-        invoices.stream()
-                .sorted(compareByAge
-                        .thenComparing(compareByProductsListSize)
-                        .thenComparing(compareByInvoiceSum))
-                .forEach(System.out::println);
-
+        List<Invoice> sortedInvoices = shopService.getSortedInvoices();
+        if (!sortedInvoices.isEmpty()) {
+            sortedInvoices.forEach(System.out::println);
+        } else {
+            System.out.println("0 invoices found");
+        }
     }
 
     private void printInvoicesByPersonsUnder18Age() {
         System.out.println("Invoices of persons under 18 age:");
-        List<Invoice> invoicesUnder18Age = invoices.stream()
-                .filter(invoice -> invoice.getCustomer().getAge() < 18)
-                .toList();
-        if (!invoicesUnder18Age.isEmpty()) {
-            invoicesUnder18Age.forEach(invoice -> {
-                invoice.setType(InvoiceType.LOW_AGE);
-                System.out.println(invoice);
-            });
+        List<Invoice> invoicesByPersonsUnder18Age = shopService.getInvoicesByPersonsUnder18Age();
+        if (!invoicesByPersonsUnder18Age.isEmpty()) {
+            invoicesByPersonsUnder18Age.forEach(System.out::println);
         } else {
             System.out.println("0 invoices of persons under 18 age found");
         }
@@ -107,75 +94,42 @@ public class Controller {
 
     private void printFirstThreeInvoices() {
         System.out.println("First 3 invoices: ");
-        invoices.stream()
-                .sorted(Comparator.comparing(Invoice::getCreated))
-                .limit(3)
-                .forEach(System.out::println);
+        List<Invoice> firstThreeInvoices = shopService.getFirstThreeInvoices();
+        if (!firstThreeInvoices.isEmpty()) {
+            firstThreeInvoices.forEach(System.out::println);
+        } else {
+            System.out.println("0 invoices found");
+        }
     }
 
     private void printInvoicesWithOnlyOneProductType() {
         System.out.println("Invoices with same product type:");
-        List<Invoice> onlyOneType = new ArrayList<>();
-        invoices.forEach(invoice -> {
-            if (checkContainsOnlyOneProductType(invoice.getProducts(), ProductType.TELEVISION)) {
-                onlyOneType.add(invoice);
-            }
-            if (checkContainsOnlyOneProductType(invoice.getProducts(), ProductType.TELEPHONE)) {
-                onlyOneType.add(invoice);
-            }
-        });
-
-        if (onlyOneType.isEmpty()) {
-            System.out.println("No one invoice have products of same type");
+        List<Invoice> invoicesWithOnlyOneProductType = shopService.getInvoicesWithOnlyOneProductType();
+        if (!invoicesWithOnlyOneProductType.isEmpty()) {
+            invoicesWithOnlyOneProductType.forEach(System.out::println);
         } else {
-            onlyOneType.forEach(System.out::println);
+            System.out.println("No one invoice have products of same type");
         }
     }
 
-    private boolean checkContainsOnlyOneProductType(List<Product> products, ProductType productType) {
-        return products.stream()
-                .allMatch(product -> product.getProductType().equals(productType));
-    }
-
-    private void printInvoiceTypeCount(InvoiceType type) {
-        long count = invoices.stream()
-                .filter(invoice -> invoice.getType().equals(type))
-                .count();
-        System.out.println(type.toString() + " invoices = " + count);
+    private void printInvoiceTypeCount(InvoiceType invoiceType) {
+        System.out.println(invoiceType.toString() + " invoices = " + shopService.getInvoiceTypeCount(invoiceType));
     }
 
     private void printSumAllInvoices() {
-        long invoicesSum = shopService.getInvoiceSum(invoices.stream()
-                .flatMap(invoice -> invoice.getProducts().stream())
-                .toList());
-        System.out.println("Sum of all invoices = " + invoicesSum);
-
+        System.out.println("Sum of all invoices = " + shopService.getSumAllInvoices());
     }
 
     private void printLowesInvoiceSum() {
         System.out.print("Lowest invoice: ");
-        invoices.stream()
-                .collect(Collectors.toMap(k -> k.getProducts()
-                                .stream()
-                                .mapToLong(Product::getPrice)
-                                .sum(),
-                        Invoice::getCustomer,
-                        (p1, p2) -> p1,
-                        TreeMap::new))
-                .entrySet()
-                .stream()
-                .findFirst()
-                .ifPresent(o -> System.out.println(o.getValue() + " sum: " + o.getKey()));
+        shopService.getLowesInvoiceSum().ifPresentOrElse(o -> System.out.println(o.getValue() + " sum: " + o.getKey()), () -> System.out.println("0 invoices found"));
     }
 
     private void printCountOfSoldProducts(ProductType productType) {
         System.out.print(productType.getName() + "s sold: ");
-        long count = invoices.stream()
-                .flatMap(invoice -> invoice.getProducts().stream())
-                .filter(product -> product.getProductType().equals(productType))
-                .count();
-        System.out.println(count);
+        System.out.println(shopService.getCountOfSoldProducts(productType));
     }
+
 
     private void setPredicate() throws IOException {
         String line;
