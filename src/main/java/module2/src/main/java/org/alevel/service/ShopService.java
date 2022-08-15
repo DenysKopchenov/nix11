@@ -19,13 +19,12 @@ import java.util.function.LongPredicate;
 public class ShopService {
 
     private final Random random;
-    private final Logger logger;
+    private static final Logger logger = LoggerFactory.getLogger(ShopService.class);
     private List<Product> products;
 
-    public ShopService(Random random) {
-        this.random = random;
+    public ShopService() {
+        this.random = new Random();
         products = new ArrayList<>();
-        logger = LoggerFactory.getLogger(ShopService.class);
     }
 
     public List<Product> createProducts(BufferedReader reader) {

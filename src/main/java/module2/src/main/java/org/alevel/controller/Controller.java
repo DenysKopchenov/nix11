@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.LongPredicate;
@@ -27,7 +26,7 @@ public class Controller {
 
     public Controller() {
         reader = new BufferedReader(new InputStreamReader(System.in));
-        shopService = new ShopService(new Random());
+        shopService = new ShopService();
         personService = new PersonService();
         invoices = new ArrayList<>();
     }
