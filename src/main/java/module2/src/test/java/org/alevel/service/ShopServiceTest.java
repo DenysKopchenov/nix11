@@ -15,6 +15,7 @@ import org.mockito.MockedStatic;
 import java.io.BufferedReader;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -26,7 +27,7 @@ class ShopServiceTest {
 
     @BeforeEach
     void setUp() {
-        target = new ShopService();
+        target = new ShopService(new Random());
         reader = mock(BufferedReader.class);
     }
 
