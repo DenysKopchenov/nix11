@@ -1,5 +1,7 @@
 package com.alevel.lesson10.shop.repository.impl;
 
+import com.alevel.lesson10.shop.annotations.Autowired;
+import com.alevel.lesson10.shop.annotations.Singleton;
 import com.alevel.lesson10.shop.model.ball.Ball;
 import com.alevel.lesson10.shop.repository.BallRepository;
 import org.slf4j.Logger;
@@ -9,12 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Singleton
 public class BallRepositoryListImpl implements BallRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BallRepositoryListImpl.class);
 
     private final List<Ball> balls;
 
+    @Autowired
     public BallRepositoryListImpl() {
         balls = new ArrayList<>();
     }

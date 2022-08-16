@@ -1,13 +1,15 @@
 package com.alevel.lesson10.shop.service;
 
+import com.alevel.lesson10.shop.annotations.Autowired;
+import com.alevel.lesson10.shop.annotations.Singleton;
 import com.alevel.lesson10.shop.model.phone.Manufacturer;
 import com.alevel.lesson10.shop.model.phone.Phone;
 import com.alevel.lesson10.shop.repository.ProductRepository;
 
-import java.util.List;
-
+@Singleton
 public class PhoneService extends AbstractProductService<Phone> {
 
+    @Autowired
     public PhoneService(ProductRepository<Phone> repository) {
         super(repository);
     }
