@@ -22,9 +22,9 @@ public class LaptopService extends AbstractProductService<Laptop> {
 
     @Override
     protected Laptop createProduct() {
-        return new Laptop.Builder(RANDOM.nextLong(), getRandomCPU())
-                .setTittle("Title - " + RANDOM.nextInt())
-                .setCount(RANDOM.nextInt(1000))
+        return new Laptop.Builder(RANDOM.nextLong(100000), getRandomCPU())
+                .setTittle("Title - " + RANDOM.nextInt(1000))
+                .setCount(RANDOM.nextInt(100))
                 .build();
     }
 }

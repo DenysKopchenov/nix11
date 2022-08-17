@@ -1,15 +1,22 @@
 package com.alevel.lesson10.shop.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.UUID;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public abstract class Product {
 
-    protected final String id;
+    protected String id;
     protected String title;
     protected int count;
     protected long price;
 
-    public Product() {
+    protected Product() {
         id = UUID.randomUUID().toString();
     }
 

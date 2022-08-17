@@ -1,9 +1,13 @@
 package com.alevel.lesson10.shop.model.laptop;
 
 import com.alevel.lesson10.shop.model.Product;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
+@Getter
+@Setter
 public class Laptop extends Product {
 
     private CPU cpu;

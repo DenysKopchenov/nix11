@@ -1,16 +1,14 @@
 package com.alevel.lesson10.shop.service;
 
 import com.alevel.lesson10.shop.context.ApplicationContext;
-import com.alevel.lesson10.shop.model.ball.Ball;
-import com.alevel.lesson10.shop.model.laptop.Laptop;
-import com.alevel.lesson10.shop.model.phone.Phone;
 
 import java.util.Map;
 
 public final class ServiceContainer {
-    private static final AbstractProductService<Ball> ballService;
-    private static final AbstractProductService<Phone> phoneService;
-    private static final AbstractProductService<Laptop> laptopService;
+    private static final BallService ballService;
+    private static final PhoneService phoneService;
+    private static final LaptopService laptopService;
+    private static final InvoiceService invoiceService;
 
     private ServiceContainer() {
     }
@@ -18,20 +16,26 @@ public final class ServiceContainer {
     static {
         ApplicationContext applicationContext = new ApplicationContext();
         Map<Class<?>, Object> cached = applicationContext.cacheSingletons();
-        ballService = (AbstractProductService<Ball>) cached.get(BallService.class);
-        phoneService = (AbstractProductService<Phone>) cached.get(PhoneService.class);
-        laptopService = (AbstractProductService<Laptop>) cached.get(LaptopService.class);
+        ballService = (BallService) cached.get(BallService.class);
+        phoneService = (PhoneService) cached.get(PhoneService.class);
+        laptopService = (LaptopService) cached.get(LaptopService.class);
+        invoiceService = (InvoiceService) cached.get(InvoiceService.class);
     }
 
-    public static AbstractProductService<Ball> getBallService() {
+    public static BallService getBallService() {
         return ballService;
     }
 
-    public static AbstractProductService<Laptop> getLaptopService() {
+    public static LaptopService getLaptopService() {
         return laptopService;
     }
 
-    public static AbstractProductService<Phone> getPhoneService() {
+    public static PhoneService getPhoneService() {
         return phoneService;
     }
+
+    public static InvoiceService getInvoiceService() {
+        return invoiceService;
+    }
+
 }

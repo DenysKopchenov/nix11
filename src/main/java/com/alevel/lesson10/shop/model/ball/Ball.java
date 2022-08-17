@@ -1,9 +1,17 @@
 package com.alevel.lesson10.shop.model.ball;
 
 import com.alevel.lesson10.shop.model.Product;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Objects;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ball extends Product {
 
     private Size size;
@@ -13,9 +21,6 @@ public class Ball extends Product {
         this.size = size;
     }
 
-    public Size getSize() {
-        return size;
-    }
 
     @Override
     public String toString() {

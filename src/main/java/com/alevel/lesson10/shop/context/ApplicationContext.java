@@ -2,10 +2,12 @@ package com.alevel.lesson10.shop.context;
 
 import com.alevel.lesson10.shop.annotations.Autowired;
 import com.alevel.lesson10.shop.annotations.Singleton;
-import com.alevel.lesson10.shop.repository.impl.BallRepositoryListImpl;
-import com.alevel.lesson10.shop.repository.impl.LaptopRepositoryListImpl;
-import com.alevel.lesson10.shop.repository.impl.PhoneRepositoryListImpl;
+import com.alevel.lesson10.shop.repository.impl.postgre.BallRepositoryPostgresImpl;
+import com.alevel.lesson10.shop.repository.impl.postgre.InvoiceRepositoryPostgresImpl;
+import com.alevel.lesson10.shop.repository.impl.postgre.LaptopRepositoryPostgresImpl;
+import com.alevel.lesson10.shop.repository.impl.postgre.PhoneRepositoryPostgresImpl;
 import com.alevel.lesson10.shop.service.BallService;
+import com.alevel.lesson10.shop.service.InvoiceService;
 import com.alevel.lesson10.shop.service.LaptopService;
 import com.alevel.lesson10.shop.service.PhoneService;
 import org.reflections.Reflections;
@@ -54,15 +56,19 @@ public class ApplicationContext {
                 if (declaredConstructor.isAnnotationPresent(Autowired.class) && declaredConstructor.getParameterCount() == 1) {
                     try {
                         if (LaptopService.class.equals(clazz)) {
-                            Object o = declaredConstructor.newInstance(singletonCache.get(LaptopRepositoryListImpl.class));
+                            Object o = declaredConstructor.newInstance(singletonCache.get(LaptopRepositoryPostgresImpl.class));
                             singletonCache.put(clazz, o);
                         }
                         if (BallService.class.equals(clazz)) {
-                            Object o = declaredConstructor.newInstance(singletonCache.get(BallRepositoryListImpl.class));
+                            Object o = declaredConstructor.newInstance(singletonCache.get(BallRepositoryPostgresImpl.class));
                             singletonCache.put(clazz, o);
                         }
                         if (PhoneService.class.equals(clazz)) {
-                            Object o = declaredConstructor.newInstance(singletonCache.get(PhoneRepositoryListImpl.class));
+                            Object o = declaredConstructor.newInstance(singletonCache.get(PhoneRepositoryPostgresImpl.class));
+                            singletonCache.put(clazz, o);
+                        }
+                        if (InvoiceService.class.equals(clazz)) {
+                            Object o = declaredConstructor.newInstance(singletonCache.get(InvoiceRepositoryPostgresImpl.class));
                             singletonCache.put(clazz, o);
                         }
 

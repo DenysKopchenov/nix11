@@ -16,9 +16,9 @@ public class BallService extends AbstractProductService<Ball> {
 
     @Override
     protected Ball createProduct() {
-        return new Ball("Title - " + RANDOM.nextInt(),
-                RANDOM.nextInt(),
-                RANDOM.nextLong(),
+        return new Ball("Title - " + RANDOM.nextInt(1000),
+                RANDOM.nextInt(100),
+                RANDOM.nextLong(10000),
                 getRandomSize());
     }
 

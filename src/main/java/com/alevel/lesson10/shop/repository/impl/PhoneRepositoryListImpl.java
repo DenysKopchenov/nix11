@@ -1,7 +1,5 @@
 package com.alevel.lesson10.shop.repository.impl;
 
-import com.alevel.lesson10.shop.annotations.Autowired;
-import com.alevel.lesson10.shop.annotations.Singleton;
 import com.alevel.lesson10.shop.model.phone.Phone;
 import com.alevel.lesson10.shop.repository.PhoneRepository;
 import org.slf4j.Logger;
@@ -11,13 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Singleton
 public class PhoneRepositoryListImpl implements PhoneRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhoneRepositoryListImpl.class);
     private final List<Phone> phones;
 
-    @Autowired
     public PhoneRepositoryListImpl() {
         phones = new ArrayList<>();
     }
