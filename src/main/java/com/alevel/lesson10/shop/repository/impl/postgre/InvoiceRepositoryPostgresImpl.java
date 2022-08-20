@@ -77,134 +77,160 @@ public class InvoiceRepositoryPostgresImpl implements InvoiceRepository {
 
     @Override
     public List<Invoice> findAllInvoicesWithSumGreaterThen(double sum) {
-        long start = System.currentTimeMillis();
-        String selectInvoice = "SELECT * FROM shop.invoice WHERE sum > ?";
+        String selectInvoice = """
+                SELECT shop.invoice.*,
+                phone.id AS phone_id,
+                phone.title AS phone_title,
+                phone.count AS phone_count,
+                phone.price AS phone_price,
+                phone.manufacturer AS phone_manufacturer,
+                phone.model AS phone_model,
+                ball.id AS ball_id,
+                ball.title AS ball_title,
+                ball.price AS ball_price,
+                ball.count AS ball_count,
+                ball.size AS ball_size,
+                laptop.id AS laptop_id,
+                laptop.title AS laptop_title,
+                laptop.price AS laptop_price,
+                laptop.count AS laptop_count,
+                laptop.cpu AS laptop_cpu
+                FROM shop.invoice
+                LEFT JOIN shop.phone ON phone.invoice_id = invoice.id
+                LEFT JOIN shop.laptop ON laptop.invoice_id = invoice.id
+                LEFT JOIN shop.ball ON ball.invoice_id = invoice.id
+                WHERE sum > ? ORDER BY invoice.id;""";
         try (PreparedStatement statement = connection.prepareStatement(selectInvoice)) {
             statement.setDouble(1, sum);
             ResultSet resultSet = statement.executeQuery();
             Map<String, Invoice> invoicesById = new HashMap<>();
             while (resultSet.next()) {
-                Invoice invoice = new Invoice();
-                invoice.setId(resultSet.getString("id"));
-                invoice.setTime(resultSet.getDate("time").toLocalDate().atTime(LocalTime.now()));
-                invoice.setSum(resultSet.getDouble("sum"));
-                invoicesById.put(invoice.getId(), invoice);
+                String id = resultSet.getString("id");
+                if (!invoicesById.containsKey(id)){
+                    Invoice invoice = new Invoice();
+                    invoice.setId(id);
+                    invoice.setTime(resultSet.getDate("time").toLocalDate().atTime(LocalTime.of(0,0)));
+                    invoice.setSum(resultSet.getDouble("sum"));
+                    invoice.setProducts(new ArrayList<>());
+                    invoicesById.put(invoice.getId(), invoice);
+                }
+                List<Product> products = invoicesById.get(id).getProducts();
+                if (resultSet.getString("ball_id") != null){
+                    Ball ball = mapBall(resultSet);
+                    if (!products.contains(ball)) {
+                        products.add(ball);
+                    }
+                }
+                if (resultSet.getString("phone_id") != null){
+                    Phone phone = mapPhone(resultSet);
+                    if (!products.contains(phone)) {
+                        products.add(phone);
+                    }
+                }
+                if (resultSet.getString("laptop_id") != null){
+                    Laptop laptop = mapLaptop(resultSet);
+                    if (!products.contains(laptop)) {
+                        products.add(laptop);
+                    }
+                }
             }
-
-            for (Invoice invoice : invoicesById.values()) {
-                List<Product> products = new ArrayList<>();
-                products.addAll(findAllPhonesOfInvoice(invoice.getId()));
-                products.addAll(findAllBallsOfInvoice(invoice.getId()));
-                products.addAll(findAllLaptopsOfInvoice(invoice.getId()));
-                invoice.setProducts(products);
-            }
-
-            System.out.println(System.currentTimeMillis() - start);
             return invoicesById.values().stream().toList();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private List<Ball> findAllBallsOfInvoice(String invoiceId) {
-        List<Ball> balls = new ArrayList<>();
-        String selectAll = "SELECT * FROM shop.ball WHERE invoice_id = ?;";
-        try (PreparedStatement statement = connection.prepareStatement(selectAll)) {
-            statement.setString(1, invoiceId);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                balls.add(mapBall(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return balls;
-    }
-
-    private List<Laptop> findAllLaptopsOfInvoice(String invoiceId) {
-        List<Laptop> laptops = new ArrayList<>();
-        String selectAll = "SELECT * FROM shop.laptop WHERE invoice_id = ?;";
-        try (PreparedStatement statement = connection.prepareStatement(selectAll)) {
-            statement.setString(1, invoiceId);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                laptops.add(mapLaptop(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return laptops;
-    }
-
-    private List<Phone> findAllPhonesOfInvoice(String invoiceId) {
-        List<Phone> phones = new ArrayList<>();
-        String selectAll = "SELECT * FROM shop.phone WHERE invoice_id = ?;";
-        try (PreparedStatement statement = connection.prepareStatement(selectAll)) {
-            statement.setString(1, invoiceId);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                phones.add(mapPhone(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return phones;
-    }
-
     private Laptop mapLaptop(ResultSet resultSet) throws SQLException {
         Laptop laptop = new Laptop.Builder(
-                resultSet.getLong("price"),
-                EnumUtils.getEnum(CPU.class, resultSet.getString("cpu"), CPU.NONE)).build();
-        laptop.setId(resultSet.getString("id"));
-        laptop.setCount(resultSet.getInt("count"));
-        laptop.setTitle(resultSet.getString("title"));
+                resultSet.getLong("laptop_price"),
+                EnumUtils.getEnum(CPU.class, resultSet.getString("laptop_cpu"), CPU.NONE)).build();
+        laptop.setId(resultSet.getString("laptop_id"));
+        laptop.setCount(resultSet.getInt("laptop_count"));
+        laptop.setTitle(resultSet.getString("laptop_title"));
         return laptop;
     }
 
 
     private Ball mapBall(ResultSet resultSet) throws SQLException {
         Ball ball = new Ball();
-        ball.setId(resultSet.getString("id"));
-        ball.setCount(resultSet.getInt("count"));
-        ball.setPrice(resultSet.getLong("price"));
-        ball.setSize(EnumUtils.getEnum(Size.class, resultSet.getString("size"), Size.NONE));
-        ball.setTitle(resultSet.getString("title"));
+        ball.setId(resultSet.getString("ball_id"));
+        ball.setCount(resultSet.getInt("ball_count"));
+        ball.setPrice(resultSet.getLong("ball_price"));
+        ball.setSize(EnumUtils.getEnum(Size.class, resultSet.getString("ball_size"), Size.NONE));
+        ball.setTitle(resultSet.getString("ball_title"));
         return ball;
     }
 
     private Phone mapPhone(ResultSet resultSet) throws SQLException {
-        Phone phone = new Phone(resultSet.getString("title"),
-                resultSet.getInt("count"),
-                resultSet.getLong("price"),
-                resultSet.getString("model"),
-                EnumUtils.getEnum(Manufacturer.class, resultSet.getString("manufacturer")));
-        phone.setId(resultSet.getString("id"));
+        Phone phone = new Phone(resultSet.getString("phone_title"),
+                resultSet.getInt("phone_count"),
+                resultSet.getLong("phone_price"),
+                resultSet.getString("phone_model"),
+                EnumUtils.getEnum(Manufacturer.class, resultSet.getString("phone_manufacturer")));
+        phone.setId(resultSet.getString("phone_id"));
         return phone;
     }
 
     @Override
     public Optional<Invoice> findById(String id) {
-        long start = System.currentTimeMillis();
-        String selectInvoice = "SELECT * FROM shop.invoice WHERE id = ?";
+        String selectInvoice = """
+                SELECT shop.invoice.*,
+                phone.id AS phone_id,
+                phone.title AS phone_title,
+                phone.count AS phone_count,
+                phone.price AS phone_price,
+                phone.manufacturer AS phone_manufacturer,
+                phone.model AS phone_model,
+                ball.id AS ball_id,
+                ball.title AS ball_title,
+                ball.price AS ball_price,
+                ball.count AS ball_count,
+                ball.size AS ball_size,
+                laptop.id AS laptop_id,
+                laptop.title AS laptop_title,
+                laptop.price AS laptop_price,
+                laptop.count AS laptop_count,
+                laptop.cpu AS laptop_cpu
+                FROM shop.invoice
+                LEFT JOIN shop.phone ON phone.invoice_id = invoice.id
+                LEFT JOIN shop.laptop ON laptop.invoice_id = invoice.id
+                LEFT JOIN shop.ball ON ball.invoice_id = invoice.id
+                WHERE invoice.id = ? ORDER BY invoice.id;""";
         try (PreparedStatement statement = connection.prepareStatement(selectInvoice)) {
             statement.setString(1, id);
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                Invoice invoice = new Invoice();
-                invoice.setId(resultSet.getString("id"));
-                invoice.setTime(resultSet.getDate("time").toLocalDate().atTime(LocalTime.now()));
-                invoice.setSum(resultSet.getDouble("sum"));
-
-                List<Product> products = new ArrayList<>();
-                products.addAll(findAllPhonesOfInvoice(invoice.getId()));
-                products.addAll(findAllBallsOfInvoice(invoice.getId()));
-                products.addAll(findAllLaptopsOfInvoice(invoice.getId()));
-                invoice.setProducts(products);
-
-                System.out.println(System.currentTimeMillis() - start);
-                return Optional.of(invoice);
+            Map<String, Invoice> invoicesById = new HashMap<>();
+            while (resultSet.next()) {
+                String idFromDB = resultSet.getString("id");
+                if (!invoicesById.containsKey(idFromDB)){
+                    Invoice invoice = new Invoice();
+                    invoice.setId(idFromDB);
+                    invoice.setTime(resultSet.getDate("time").toLocalDate().atTime(LocalTime.of(0,0)));
+                    invoice.setSum(resultSet.getDouble("sum"));
+                    invoice.setProducts(new ArrayList<>());
+                    invoicesById.put(invoice.getId(), invoice);
+                }
+                List<Product> products = invoicesById.get(idFromDB).getProducts();
+                if (resultSet.getString("ball_id") != null){
+                    Ball ball = mapBall(resultSet);
+                    if (!products.contains(ball)) {
+                        products.add(ball);
+                    }
+                }
+                if (resultSet.getString("phone_id") != null){
+                    Phone phone = mapPhone(resultSet);
+                    if (!products.contains(phone)) {
+                        products.add(phone);
+                    }
+                }
+                if (resultSet.getString("laptop_id") != null){
+                    Laptop laptop = mapLaptop(resultSet);
+                    if (!products.contains(laptop)) {
+                        products.add(laptop);
+                    }
+                }
             }
-            return Optional.empty();
+            return invoicesById.values().stream().findFirst();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
