@@ -18,9 +18,11 @@ public abstract class AbstractProductService<T extends Product> {
     }
 
     public void createAndFillRepository(int count) {
+        List<T> products = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            repository.save(createProduct());
+            products.add(createProduct());
         }
+        repository.saveAll(products);
     }
 
     protected abstract T createProduct();

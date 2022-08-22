@@ -1,7 +1,7 @@
 package com.alevel.lesson10.shop.command;
 
 public enum Commands {
-    CREATE("Create", new Create()),
+    CREATE("Create", new CreateProduct()),
     UPDATE("Update", new Update()),
     DELETE("Delete", new Delete()),
     PRINT("Print all", new Print()),

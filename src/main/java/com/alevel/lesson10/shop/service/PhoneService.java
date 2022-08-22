@@ -17,8 +17,8 @@ public class PhoneService extends AbstractProductService<Phone> {
     @Override
     protected Phone createProduct() {
         return new Phone("Title - " + RANDOM.nextInt(1000),
-                RANDOM.nextInt(1000),
-                RANDOM.nextLong(1000),
+                RANDOM.nextInt(100),
+                RANDOM.nextLong(100000),
                 "Model - " + RANDOM.nextInt(1000),
                 getRandomManufacturer());
     }
