@@ -1,7 +1,5 @@
-package com.alevel.lesson10.shop.repository.impl.postgre;
+package com.alevel.lesson10.shop.repository.impl.jdbc;
 
-import com.alevel.lesson10.shop.annotations.Autowired;
-import com.alevel.lesson10.shop.annotations.Singleton;
 import com.alevel.lesson10.shop.config.JDBCConfig;
 import com.alevel.lesson10.shop.model.ball.Ball;
 import com.alevel.lesson10.shop.model.ball.Size;
@@ -13,13 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Singleton
-public class BallRepositoryPostgresImpl implements BallRepository {
+public class BallRepositoryPostgresJDBCImpl implements BallRepository {
 
     private final Connection connection;
 
-    @Autowired
-    public BallRepositoryPostgresImpl() {
+    public BallRepositoryPostgresJDBCImpl() {
         connection = JDBCConfig.getConnection();
     }
 

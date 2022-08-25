@@ -3,25 +3,37 @@ package com.alevel.lesson10.shop.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
-import java.util.UUID;
+import javax.persistence.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@Entity()
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(schema = "hibernate_shop")
 public abstract class Product {
 
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator")
     protected String id;
+    @Column
     protected String title;
+    @Column
     protected int count;
+    @Column
     protected long price;
+    @ManyToOne
+    @JoinColumn(name = "invoice_id")
+    protected Invoice invoice;
 
     protected Product() {
-        id = UUID.randomUUID().toString();
     }
 
     protected Product(String title, int count, long price) {
-        id = UUID.randomUUID().toString();
         this.title = title;
         this.count = count;
         this.price = price;

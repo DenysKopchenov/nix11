@@ -2,10 +2,10 @@ package com.alevel.lesson10.shop.context;
 
 import com.alevel.lesson10.shop.annotations.Autowired;
 import com.alevel.lesson10.shop.annotations.Singleton;
-import com.alevel.lesson10.shop.repository.impl.postgre.BallRepositoryPostgresImpl;
-import com.alevel.lesson10.shop.repository.impl.postgre.InvoiceRepositoryPostgresImpl;
-import com.alevel.lesson10.shop.repository.impl.postgre.LaptopRepositoryPostgresImpl;
-import com.alevel.lesson10.shop.repository.impl.postgre.PhoneRepositoryPostgresImpl;
+import com.alevel.lesson10.shop.repository.impl.hibernate.BallRepositoryPostgresHibernateImpl;
+import com.alevel.lesson10.shop.repository.impl.hibernate.InvoiceRepositoryPostgresHibernateImpl;
+import com.alevel.lesson10.shop.repository.impl.hibernate.LaptopRepositoryPostgresHibernateImpl;
+import com.alevel.lesson10.shop.repository.impl.hibernate.PhoneRepositoryPostgresHibernateImpl;
 import com.alevel.lesson10.shop.service.BallService;
 import com.alevel.lesson10.shop.service.InvoiceService;
 import com.alevel.lesson10.shop.service.LaptopService;
@@ -56,19 +56,19 @@ public class ApplicationContext {
                 if (declaredConstructor.isAnnotationPresent(Autowired.class) && declaredConstructor.getParameterCount() == 1) {
                     try {
                         if (LaptopService.class.equals(clazz)) {
-                            Object o = declaredConstructor.newInstance(singletonCache.get(LaptopRepositoryPostgresImpl.class));
+                            Object o = declaredConstructor.newInstance(singletonCache.get(LaptopRepositoryPostgresHibernateImpl.class));
                             singletonCache.put(clazz, o);
                         }
                         if (BallService.class.equals(clazz)) {
-                            Object o = declaredConstructor.newInstance(singletonCache.get(BallRepositoryPostgresImpl.class));
+                            Object o = declaredConstructor.newInstance(singletonCache.get(BallRepositoryPostgresHibernateImpl.class));
                             singletonCache.put(clazz, o);
                         }
                         if (PhoneService.class.equals(clazz)) {
-                            Object o = declaredConstructor.newInstance(singletonCache.get(PhoneRepositoryPostgresImpl.class));
+                            Object o = declaredConstructor.newInstance(singletonCache.get(PhoneRepositoryPostgresHibernateImpl.class));
                             singletonCache.put(clazz, o);
                         }
                         if (InvoiceService.class.equals(clazz)) {
-                            Object o = declaredConstructor.newInstance(singletonCache.get(InvoiceRepositoryPostgresImpl.class));
+                            Object o = declaredConstructor.newInstance(singletonCache.get(InvoiceRepositoryPostgresHibernateImpl.class));
                             singletonCache.put(clazz, o);
                         }
 

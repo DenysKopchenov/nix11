@@ -1,7 +1,5 @@
-package com.alevel.lesson10.shop.repository.impl.postgre;
+package com.alevel.lesson10.shop.repository.impl.jdbc;
 
-import com.alevel.lesson10.shop.annotations.Autowired;
-import com.alevel.lesson10.shop.annotations.Singleton;
 import com.alevel.lesson10.shop.config.JDBCConfig;
 import com.alevel.lesson10.shop.model.Invoice;
 import com.alevel.lesson10.shop.model.Product;
@@ -19,13 +17,11 @@ import java.sql.*;
 import java.time.LocalTime;
 import java.util.*;
 
-@Singleton
-public class InvoiceRepositoryPostgresImpl implements InvoiceRepository {
+public class InvoiceRepositoryPostgresJDBCImpl implements InvoiceRepository {
 
     private final Connection connection;
 
-    @Autowired
-    public InvoiceRepositoryPostgresImpl() {
+    public InvoiceRepositoryPostgresJDBCImpl() {
         connection = JDBCConfig.getConnection();
     }
 
@@ -265,13 +261,13 @@ public class InvoiceRepositoryPostgresImpl implements InvoiceRepository {
     }
 
     @Override
-    public Map<Long, Long> groupBySum() {
-        Map<Long, Long> countSum = new HashMap<>();
+    public Map<Double, Long> groupBySum() {
+        Map<Double, Long> countSum = new HashMap<>();
         String groupBySum = "SELECT count(id) AS count, invoice.sum FROM shop.invoice GROUP BY invoice.sum;";
         try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(groupBySum);
             while (resultSet.next()) {
-                countSum.put(resultSet.getLong("sum"), resultSet.getLong("count"));
+                countSum.put(resultSet.getDouble("sum"), resultSet.getLong("count"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

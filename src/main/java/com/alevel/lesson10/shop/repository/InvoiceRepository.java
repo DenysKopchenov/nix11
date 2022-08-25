@@ -18,5 +18,5 @@ public interface InvoiceRepository {
 
     long getInvoiceCount();
 
-    Map<Long, Long> groupBySum();
+    Map<Double, Long> groupBySum();
 }
