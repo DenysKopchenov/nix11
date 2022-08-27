@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+import static com.alevel.lesson10.shop.config.HibernateUtil.HIBERNATE_BATCH_SIZE;
+
 @Singleton
 public class LaptopRepositoryPostgresHibernateImpl implements LaptopRepository {
 
@@ -33,8 +35,9 @@ public class LaptopRepositoryPostgresHibernateImpl implements LaptopRepository {
         int counter = 0;
         for (Laptop product : products) {
             entityManager.persist(product);
-            if (counter++ % products.size() == 0) {
+            if (++counter % HIBERNATE_BATCH_SIZE == 0) {
                 entityManager.flush();
+                entityManager.clear();
             }
         }
         entityManager.getTransaction().commit();
