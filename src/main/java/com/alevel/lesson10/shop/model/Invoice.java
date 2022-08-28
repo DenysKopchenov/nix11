@@ -24,6 +24,8 @@ public class Invoice {
     @OneToMany(mappedBy = "invoice",
             cascade = CascadeType.PERSIST,
             fetch = FetchType.LAZY)
-    private List<Product> products;
+    private transient List<Product> products;
+    @Transient
+    private List<String> productIds;
     private LocalDateTime time;
 }
