@@ -25,6 +25,7 @@ public class InvoiceService {
         Invoice invoice = new Invoice();
         invoice.setTime(LocalDateTime.now());
         invoice.setSum(invoiceProducts.stream().mapToDouble(Product::getPrice).sum());
+        invoiceProducts.forEach(product -> product.setInvoice(invoice));
         invoice.setProducts(new ArrayList<>(invoiceProducts));
         invoiceRepository.save(invoice);
     }
@@ -46,7 +47,11 @@ public class InvoiceService {
         });
     }
 
-    public Map<Long, Long> groupInvoiceBySum() {
+    public Map<Double, Long> groupInvoiceBySum() {
         return invoiceRepository.groupBySum();
+    }
+
+    public Invoice findById(String id) {
+        return invoiceRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 }

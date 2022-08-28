@@ -2,18 +2,19 @@ package com.alevel.lesson10.shop.model.laptop;
 
 import com.alevel.lesson10.shop.model.Product;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Entity;
 import java.util.Objects;
 
+@NoArgsConstructor
 @Getter
 @Setter
+@Entity
 public class Laptop extends Product {
 
     private CPU cpu;
-
-    private Laptop() {
-    }
 
     public void setCpu(CPU cpu) {
         this.cpu = cpu;

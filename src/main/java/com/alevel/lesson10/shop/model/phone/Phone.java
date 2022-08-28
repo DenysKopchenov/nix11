@@ -1,18 +1,32 @@
 package com.alevel.lesson10.shop.model.phone;
 
 import com.alevel.lesson10.shop.model.Product;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+@NoArgsConstructor
+@Getter
+@Setter
+@Entity
 public class Phone extends Product {
 
     private String model;
     private Manufacturer manufacturer;
+
+    @Transient
     private List<String> details;
+    @Transient
     private LocalDateTime creatingDate;
+    @Transient
     private String currency;
+    @Transient
     private OperationSystem operationSystem;
 
 

@@ -6,6 +6,7 @@ public enum Commands {
     DELETE("Delete", new Delete()),
     PRINT("Print all", new Print()),
     PARSE("Parse files", new Parse()),
+    HIBERNATE("Hibernate", new Hibernate()),
     EXIT("Exit", new Exit());
 
     private final String name;

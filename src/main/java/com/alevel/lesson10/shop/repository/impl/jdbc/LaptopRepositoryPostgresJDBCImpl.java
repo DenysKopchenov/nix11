@@ -1,7 +1,5 @@
-package com.alevel.lesson10.shop.repository.impl.postgre;
+package com.alevel.lesson10.shop.repository.impl.jdbc;
 
-import com.alevel.lesson10.shop.annotations.Autowired;
-import com.alevel.lesson10.shop.annotations.Singleton;
 import com.alevel.lesson10.shop.config.JDBCConfig;
 import com.alevel.lesson10.shop.model.laptop.CPU;
 import com.alevel.lesson10.shop.model.laptop.Laptop;
@@ -13,12 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Singleton
-public class LaptopRepositoryPostgresImpl implements LaptopRepository {
+public class LaptopRepositoryPostgresJDBCImpl implements LaptopRepository {
     private final Connection connection;
 
-    @Autowired
-    public LaptopRepositoryPostgresImpl() {
+    public LaptopRepositoryPostgresJDBCImpl() {
         connection = JDBCConfig.getConnection();
     }
 
