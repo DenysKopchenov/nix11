@@ -9,7 +9,7 @@ public class HibernateUtil {
     private HibernateUtil() {
     }
 
-    public static final int HIBERNATE_BATCH_SIZE = 5;
+    public static final int HIBERNATE_BATCH_SIZE = 20;
 
     private static EntityManager entityManager;
 

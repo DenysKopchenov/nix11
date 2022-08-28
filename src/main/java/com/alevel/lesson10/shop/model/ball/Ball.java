@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.util.Objects;
 
@@ -17,7 +16,6 @@ import java.util.Objects;
 @Entity
 public class Ball extends Product {
 
-    @Column
     private Size size;
 
     public Ball(String title, int count, long price, Size size) {

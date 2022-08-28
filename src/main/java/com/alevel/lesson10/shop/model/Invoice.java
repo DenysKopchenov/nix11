@@ -20,7 +20,6 @@ public class Invoice {
     @GenericGenerator(name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
-    @Column
     private double sum;
     @OneToMany(mappedBy = "invoice",
             cascade = CascadeType.PERSIST,

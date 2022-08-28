@@ -20,11 +20,8 @@ public abstract class Product {
     @GenericGenerator(name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator")
     protected String id;
-    @Column
     protected String title;
-    @Column
     protected int count;
-    @Column
     protected long price;
     @ManyToOne
     @JoinColumn(name = "invoice_id")
