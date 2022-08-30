@@ -3,6 +3,9 @@ package com.alevel.lesson10.shop.controller;
 import com.alevel.lesson10.shop.command.Command;
 import com.alevel.lesson10.shop.command.Commands;
 import com.alevel.lesson10.shop.command.Utils;
+import com.alevel.lesson10.shop.config.FlywayConfig;
+import com.alevel.lesson10.shop.config.HibernateUtil;
+import org.flywaydb.core.Flyway;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -10,10 +13,9 @@ import java.util.List;
 
 public final class Controller {
 
-    private Controller() {
-    }
 
-    public static void run() {
+    public void run() {
+        init();
         try {
             int userAction = chooseAction();
             Commands[] commands = Commands.values();
@@ -23,6 +25,13 @@ public final class Controller {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void init() {
+        Flyway flyway = FlywayConfig.configureFlyway();
+        flyway.clean();
+        HibernateUtil.getEntityManager();
+        flyway.migrate();
     }
 
     private static int chooseAction() throws IOException {

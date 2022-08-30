@@ -24,6 +24,11 @@ public class Laptop extends Product {
         return cpu;
     }
 
+    public Laptop(String title, int count, long price, CPU cpu) {
+        super(title, count, price);
+        this.cpu = cpu;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Laptop{");
