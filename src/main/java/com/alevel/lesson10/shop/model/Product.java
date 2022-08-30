@@ -3,9 +3,12 @@ package com.alevel.lesson10.shop.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.UUID;
+
 
 @Getter
 @Setter
@@ -13,6 +16,7 @@ import javax.persistence.*;
 @Entity()
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(schema = "hibernate_shop")
+@ToString
 public abstract class Product {
 
     @Id
@@ -25,12 +29,14 @@ public abstract class Product {
     protected long price;
     @ManyToOne
     @JoinColumn(name = "invoice_id")
-    protected Invoice invoice;
+    protected transient Invoice invoice;
 
     protected Product() {
+        id = UUID.randomUUID().toString();
     }
 
     protected Product(String title, int count, long price) {
+        id = UUID.randomUUID().toString();
         this.title = title;
         this.count = count;
         this.price = price;

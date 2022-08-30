@@ -6,7 +6,8 @@ public enum Commands {
     DELETE("Delete", new Delete()),
     PRINT("Print all", new Print()),
     PARSE("Parse files", new Parse()),
-    HIBERNATE("Hibernate", new Hibernate()),
+    //    HIBERNATE("Hibernate", new Hibernate()),
+    MONGODB("MongoDB", new MongoDB()),
     EXIT("Exit", new Exit());
 
     private final String name;

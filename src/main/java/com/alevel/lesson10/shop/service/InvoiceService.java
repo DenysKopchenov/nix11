@@ -27,6 +27,9 @@ public class InvoiceService {
         invoice.setSum(invoiceProducts.stream().mapToDouble(Product::getPrice).sum());
         invoiceProducts.forEach(product -> product.setInvoice(invoice));
         invoice.setProducts(new ArrayList<>(invoiceProducts));
+        invoice.setProductIds(invoiceProducts.stream()
+                .map(Product::getId)
+                .toList());
         invoiceRepository.save(invoice);
     }
 
