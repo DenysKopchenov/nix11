@@ -1,17 +1,20 @@
 package com.alevel.lesson10.shop.service;
 
-import com.alevel.lesson10.shop.repository.impl.mongo.BallRepositoryMongoImpl;
-import com.alevel.lesson10.shop.repository.impl.mongo.InvoiceRepositoryMongoImpl;
-import com.alevel.lesson10.shop.repository.impl.mongo.LaptopRepositoryMongoImpl;
-import com.alevel.lesson10.shop.repository.impl.mongo.PhoneRepositoryMongoImpl;
+import com.alevel.lesson10.shop.config.HibernateUtil;
+import com.alevel.lesson10.shop.repository.impl.hibernate.BallRepositoryPostgresHibernateImpl;
+import com.alevel.lesson10.shop.repository.impl.hibernate.InvoiceRepositoryPostgresHibernateImpl;
+import com.alevel.lesson10.shop.repository.impl.hibernate.LaptopRepositoryPostgresHibernateImpl;
+import com.alevel.lesson10.shop.repository.impl.hibernate.PhoneRepositoryPostgresHibernateImpl;
+
+import javax.persistence.EntityManager;
 
 public final class ServiceContainer {
 
-    //    private static final EntityManager entityManager = HibernateUtil.getEntityManager();
-    private static final BallService ballService = new BallService(new BallRepositoryMongoImpl());
-    private static final PhoneService phoneService = new PhoneService(new PhoneRepositoryMongoImpl());
-    private static final LaptopService laptopService = new LaptopService(new LaptopRepositoryMongoImpl());
-    private static final InvoiceService invoiceService = new InvoiceService(new InvoiceRepositoryMongoImpl());
+    private static final EntityManager entityManager = HibernateUtil.getEntityManager();
+    private static final BallService ballService = new BallService(new BallRepositoryPostgresHibernateImpl(entityManager));
+    private static final PhoneService phoneService = new PhoneService(new PhoneRepositoryPostgresHibernateImpl(entityManager));
+    private static final LaptopService laptopService = new LaptopService(new LaptopRepositoryPostgresHibernateImpl(entityManager));
+    private static final InvoiceService invoiceService = new InvoiceService(new InvoiceRepositoryPostgresHibernateImpl(entityManager));
 
     private ServiceContainer() {
     }

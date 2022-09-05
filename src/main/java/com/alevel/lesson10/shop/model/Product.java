@@ -7,7 +7,6 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 
 @Getter
@@ -29,14 +28,12 @@ public abstract class Product {
     protected long price;
     @ManyToOne
     @JoinColumn(name = "invoice_id")
-    protected transient Invoice invoice;
+    protected Invoice invoice;
 
     protected Product() {
-        id = UUID.randomUUID().toString();
     }
 
     protected Product(String title, int count, long price) {
-        id = UUID.randomUUID().toString();
         this.title = title;
         this.count = count;
         this.price = price;
