@@ -51,8 +51,8 @@ public final class Controller {
                 case 1 -> {
                     int userAction = chooseAction();
                     Commands[] commands = Commands.values();
-                    Command newCommand = commands[userAction].getCommand();
-                    newCommand.execute();
+                    command = commands[userAction].getCommand();
+                    command.execute();
                     input = Utils.getInput(List.of("Repeat", "Other action"));
                 }
                 default -> {
